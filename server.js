@@ -19,9 +19,11 @@ async function run() {
     try {
         await client.connect();
         console.log("database connection succesfully");
-        const database = client.db("TravelDB");
-        const carCollection = database.collection("cars");
-        const orderCollection = database.collection("orders");
+        const database = client.db("TukiRide");
+        const carCollection = database.collection("Cars");
+        const orderCollection = database.collection("Orders");
+        const reviewCollection = database.collection("Reviews");
+        const adminCollection = database.collection("Admins");
 
         //-----GET API-----//
 
@@ -39,6 +41,13 @@ async function run() {
             res.send(orders);
         });
 
+        // Get all Review 
+        app.get("/allreviews", async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const review = await cursor.toArray();
+            res.send(review);
+        });
+
 
         //-----POST API-----//
 
@@ -51,6 +60,20 @@ async function run() {
         // add Order API
         app.post('/addorder', async (req, res) => {
             const result = await orderCollection.insertOne(req.body);
+            res.json(result);
+        });
+
+
+        // add Review API
+        app.post('/addreview', async (req, res) => {
+            const result = await reviewCollection.insertOne(req.body);
+            res.json(result);
+        });
+
+
+        // add Admin API
+        app.post('/addadmin', async (req, res) => {
+            const result = await adminCollection.insertOne(req.body);
             res.json(result);
         });
 
