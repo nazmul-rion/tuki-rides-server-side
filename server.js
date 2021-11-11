@@ -19,7 +19,7 @@ async function run() {
     try {
         await client.connect();
         console.log("database connection succesfully");
-        const database = client.db("TukiRide");
+        const database = client.db("TukiRides");
         const carCollection = database.collection("Cars");
         const orderCollection = database.collection("Orders");
         const reviewCollection = database.collection("Reviews");
