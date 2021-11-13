@@ -35,6 +35,13 @@ async function run() {
             res.send(cars);
         });
 
+        // Get all cars 
+        app.get("/allusers", async (req, res) => {
+            const cursor = userCollection.find({});
+            const users = await cursor.toArray();
+            res.send(users);
+        });
+
         // Get all orders 
         app.get("/allorders", async (req, res) => {
             const cursor = orderCollection.find({});
@@ -96,20 +103,26 @@ async function run() {
         });
 
         // UPSERT User API
-        app.put('/adduser'), async (req, res) => {
+        app.put('/allusers'), async (req, res) => {
             const user = req.body;
+            console.log(user);
             const filter = { email: user.email };
-            const options = { upsert: true };
+            // const options = { upsert: true };
             const updateDoc = { $set: user };
             const result = await userCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         }
 
         // UPSERT Admin API
-        app.put('/addadmin'), async (req, res) => {
+        app.put('/allusers/makeadmin'), async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
-            const updateDoc = { $set: { role: 'admin' } };
+            const updateDoc =
+            {
+                $set: {
+                    role: 'admin'
+                }
+            };
             const result = await userCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         }
