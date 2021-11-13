@@ -114,18 +114,18 @@ async function run() {
         });
 
         // UPSERT User API
-        app.put('/allusers'), async (req, res) => {
+        app.put('/adduser'), async (req, res) => {
             const user = req.body;
             console.log(user);
             const filter = { email: user.email };
-            // const options = { upsert: true };
+            const options = { upsert: true };
             const updateDoc = { $set: user };
             const result = await userCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         }
 
         // UPSERT Admin API
-        app.put('/allusers/makeadmin'), async (req, res) => {
+        app.put('/adduser/makeadmin'), async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
             const updateDoc =
@@ -134,7 +134,7 @@ async function run() {
                     role: 'admin'
                 }
             };
-            const result = await userCollection.updateOne(filter, updateDoc, options);
+            const result = await userCollection.updateOne(filter, updateDoc);
             res.json(result);
         }
 
