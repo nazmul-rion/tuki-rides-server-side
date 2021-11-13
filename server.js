@@ -35,12 +35,23 @@ async function run() {
             res.send(cars);
         });
 
-        // Get all cars 
+        // Get all users 
         app.get("/allusers", async (req, res) => {
             const cursor = userCollection.find({});
             const users = await cursor.toArray();
             res.send(users);
         });
+
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
 
         // Get all orders 
         app.get("/allorders", async (req, res) => {
