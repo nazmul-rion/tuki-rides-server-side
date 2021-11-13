@@ -20,6 +20,7 @@ async function run() {
         await client.connect();
         console.log("database connection succesfully");
         const database = client.db("TukiRides");
+        const userCollection = database.collection("Users");
         const carCollection = database.collection("Cars");
         const orderCollection = database.collection("Orders");
         const reviewCollection = database.collection("Reviews");
@@ -51,6 +52,12 @@ async function run() {
 
         //-----POST API-----//
 
+        // add User API
+        app.post('/adduser', async (req, res) => {
+            const result = await userCollection.insertOne(req.body);
+            res.json(result);
+        });
+
         // add car API
         app.post('/addcars', async (req, res) => {
             const result = await carCollection.insertOne(req.body);
@@ -71,12 +78,6 @@ async function run() {
         });
 
 
-        // add Admin API
-        app.post('/addadmin', async (req, res) => {
-            const result = await adminCollection.insertOne(req.body);
-            res.json(result);
-        });
-
 
         //-----UPDATE API-----//
 
@@ -93,6 +94,25 @@ async function run() {
             const result = await orderCollection.updateOne(filter, updateDoc, options);
             res.json(result)
         });
+
+        // UPSERT User API
+        app.put('/adduser'), async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        }
+
+        // UPSERT Admin API
+        app.put('/addadmin'), async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        }
 
 
         //-----DELETE API-----//
